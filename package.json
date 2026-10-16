@@ -1,0 +1,463 @@
+{
+  "name": "itmo-cpp-labkit",
+  "displayName": "ITMO C++ Lab Kit",
+  "description": "%description%",
+  "version": "0.4.7",
+  "publisher": "kewldan",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.140.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "c++",
+    "cpp",
+    "itmo",
+    "clang-tidy",
+    "clang-format",
+    "googletest",
+    "complexity",
+    "makefile"
+  ],
+  "main": "./out/src/extension.js",
+  "activationEvents": [
+    "onLanguage:cpp",
+    "onLanguage:c",
+    "workspaceContains:**/.labkit.json",
+    "workspaceContains:**/*_test.cc"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "labkit.menu",
+        "title": "%command.menu%",
+        "category": "Lab Kit",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "labkit.setupEnvironment",
+        "title": "%command.setupEnvironment%",
+        "category": "Lab Kit",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "labkit.generateMakefile",
+        "title": "%command.generateMakefile%",
+        "category": "Lab Kit"
+      },
+      {
+        "command": "labkit.build",
+        "title": "%command.build%",
+        "category": "Lab Kit",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "labkit.run",
+        "title": "%command.run%",
+        "category": "Lab Kit",
+        "icon": "$(play)"
+      },
+      {
+        "command": "labkit.test",
+        "title": "%command.test%",
+        "category": "Lab Kit",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "labkit.check",
+        "title": "%command.check%",
+        "category": "Lab Kit",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "labkit.format",
+        "title": "%command.format%",
+        "category": "Lab Kit"
+      },
+      {
+        "command": "labkit.complexityReport",
+        "title": "%command.complexityReport%",
+        "category": "Lab Kit",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "labkit.timeReport",
+        "title": "%command.timeReport%",
+        "category": "Lab Kit",
+        "icon": "$(clock)"
+      },
+      {
+        "command": "labkit.toggleTimer",
+        "title": "%command.toggleTimer%",
+        "category": "Lab Kit"
+      },
+      {
+        "command": "labkit.doctor",
+        "title": "%command.doctor%",
+        "category": "Lab Kit",
+        "icon": "$(heart)"
+      },
+      {
+        "command": "labkit.installGitHooks",
+        "title": "%command.installGitHooks%",
+        "category": "Lab Kit"
+      },
+      {
+        "command": "labkit.removeGitHooks",
+        "title": "%command.removeGitHooks%",
+        "category": "Lab Kit"
+      },
+      {
+        "command": "labkit.task.refresh",
+        "title": "%command.task.refresh%",
+        "category": "Lab Kit",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "labkit.task.openSource",
+        "title": "%command.task.openSource%",
+        "category": "Lab Kit",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "labkit.task.reset",
+        "title": "%command.task.reset%",
+        "category": "Lab Kit",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "labkit.task.pickFile",
+        "title": "%command.task.pickFile%",
+        "category": "Lab Kit",
+        "icon": "$(file-add)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "labkit.run",
+          "when": "editorLangId =~ /^(cpp|c)$/ && labkit.inLab",
+          "group": "navigation@1"
+        },
+        {
+          "command": "labkit.test",
+          "when": "editorLangId =~ /^(cpp|c)$/ && labkit.inLab",
+          "group": "navigation@2"
+        },
+        {
+          "command": "labkit.check",
+          "when": "editorLangId =~ /^(cpp|c)$/ && labkit.inLab",
+          "group": "navigation@3"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "labkit.generateMakefile",
+          "when": "explorerResourceIsFolder",
+          "group": "labkit@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "labkit.task.openSource",
+          "when": "view == labkit.task",
+          "group": "navigation@1"
+        },
+        {
+          "command": "labkit.task.refresh",
+          "when": "view == labkit.task",
+          "group": "navigation@2"
+        },
+        {
+          "command": "labkit.task.pickFile",
+          "when": "view == labkit.task",
+          "group": "1_reset@0"
+        },
+        {
+          "command": "labkit.task.reset",
+          "when": "view == labkit.task",
+          "group": "1_reset"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "labkit.task.refresh",
+          "when": "false"
+        },
+        {
+          "command": "labkit.task.reset",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "labkit.run",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "labkit.inLab"
+      },
+      {
+        "command": "labkit.test",
+        "key": "ctrl+alt+t",
+        "mac": "cmd+alt+t",
+        "when": "labkit.inLab"
+      }
+    ],
+    "taskDefinitions": [
+      {
+        "type": "labkit",
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "%task.target%"
+          }
+        }
+      }
+    ],
+    "problemMatchers": [
+      {
+        "name": "labkit-cpp",
+        "owner": "labkit",
+        "source": "Lab Kit",
+        "fileLocation": [
+          "autoDetect",
+          "${workspaceFolder}"
+        ],
+        "pattern": {
+          "regexp": "^(.*?):(\\d+):(\\d+):\\s+(?:fatal\\s+)?(warning|error|note):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    ],
+    "configuration": {
+      "title": "ITMO C++ Lab Kit",
+      "properties": {
+        "labkit.language": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "en",
+            "ru"
+          ],
+          "enumDescriptions": [
+            "%config.language.0%",
+            "%config.language.1%",
+            "%config.language.2%"
+          ],
+          "default": "auto",
+          "description": "%config.language%"
+        },
+        "labkit.llvmBinDir": {
+          "type": "string",
+          "default": "",
+          "description": "%config.llvmBinDir%"
+        },
+        "labkit.minLlvmVersion": {
+          "type": "number",
+          "default": 18,
+          "description": "%config.minLlvmVersion%"
+        },
+        "labkit.clangTidy.profile": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "ci",
+            "basic",
+            "strict",
+            "custom"
+          ],
+          "enumDescriptions": [
+            "%config.clangTidy.profile.auto%",
+            "%config.clangTidy.profile.ci%",
+            "%config.clangTidy.profile.0%",
+            "%config.clangTidy.profile.1%",
+            "%config.clangTidy.profile.2%"
+          ],
+          "default": "auto",
+          "description": "%config.clangTidy.profile%"
+        },
+        "labkit.clangTidy.customConfig": {
+          "type": "string",
+          "default": "",
+          "description": "%config.clangTidy.customConfig%"
+        },
+        "labkit.complexity.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.complexity.enabled%"
+        },
+        "labkit.complexity.codeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.complexity.codeLens%"
+        },
+        "labkit.complexity.maxCyclomatic": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "description": "%config.complexity.maxCyclomatic%"
+        },
+        "labkit.complexity.maxCognitive": {
+          "type": "number",
+          "default": 15,
+          "minimum": 1,
+          "description": "%config.complexity.maxCognitive%"
+        },
+        "labkit.complexity.maxLines": {
+          "type": "number",
+          "default": 40,
+          "minimum": 1,
+          "description": "%config.complexity.maxLines%"
+        },
+        "labkit.complexity.maxParams": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "description": "%config.complexity.maxParams%"
+        },
+        "labkit.complexity.maxNesting": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "description": "%config.complexity.maxNesting%"
+        },
+        "labkit.time.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.time.enabled%"
+        },
+        "labkit.time.idleMinutes": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "description": "%config.time.idleMinutes%"
+        },
+        "labkit.tests.buildArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "%config.tests.buildArgs%"
+        },
+        "labkit.cmake.buildDir": {
+          "type": "string",
+          "default": "build",
+          "description": "%config.cmake.buildDir%"
+        },
+        "labkit.cmake.configureArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "%config.cmake.configureArgs%"
+        },
+        "labkit.task.files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "TASK.md",
+            "task.md",
+            "ЗАДАНИЕ.md",
+            "README.md"
+          ],
+          "description": "%config.task.files%"
+        },
+        "labkit.gitHooks.preCommit": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "format",
+              "tidy"
+            ]
+          },
+          "uniqueItems": true,
+          "default": [
+            "format",
+            "tidy"
+          ],
+          "description": "%config.gitHooks.preCommit%"
+        },
+        "labkit.gitHooks.prePush": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "test"
+            ]
+          },
+          "uniqueItems": true,
+          "default": [
+            "test"
+          ],
+          "description": "%config.gitHooks.prePush%"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "labkit",
+          "title": "Lab Kit",
+          "icon": "media/labkit.svg"
+        }
+      ]
+    },
+    "views": {
+      "labkit": [
+        {
+          "type": "webview",
+          "id": "labkit.task",
+          "name": "%view.task%"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p .",
+    "test": "bun test ./test",
+    "typecheck": "tsc -p . --noEmit",
+    "package": "biome check && rm -rf out && bun run compile && vsce package --no-dependencies --allow-missing-repository",
+    "test:vscode": "tsc -p . && node out/test/vscode/run.js",
+    "lint": "biome lint",
+    "format": "biome format --write",
+    "check": "biome check",
+    "fix": "biome check --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/node": "^26.6.5",
+    "@types/vscode": "~1.140.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "typescript": "^7.0.2"
+  },
+  "packageManager": "bun@1.4.3",
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "%untrusted%"
+    }
+  }
+}

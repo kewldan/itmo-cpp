@@ -1,0 +1,11 @@
+src/**
+test/**
+out/test/**
+**/*.map
+tsconfig.json
+node_modules/**
+bun.lock
+.vscode/**
+biome.json
+CLAUDE.md
+.github/**
