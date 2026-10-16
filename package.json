@@ -5,6 +5,14 @@
   "version": "0.4.7",
   "publisher": "kewldan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kewldan/itmo-cpp"
+  },
+  "homepage": "https://github.com/kewldan/itmo-cpp#readme",
+  "bugs": {
+    "url": "https://github.com/kewldan/itmo-cpp/issues"
+  },
   "engines": {
     "vscode": "^1.140.0"
   },
@@ -435,7 +443,7 @@
     "watch": "tsc -watch -p .",
     "test": "bun test ./test",
     "typecheck": "tsc -p . --noEmit",
-    "package": "biome check && rm -rf out && bun run compile && vsce package --no-dependencies --allow-missing-repository",
+    "package": "biome check && rm -rf out && bun run compile && vsce package --no-dependencies",
     "test:vscode": "tsc -p . && node out/test/vscode/run.js",
     "lint": "biome lint",
     "format": "biome format --write",
